@@ -40,3 +40,6 @@ for i = 1:numel(tests)
 end
 
 fprintf('\n%d passed, %d failed\n', passed, failed);
+if failed > 0
+  exit(1);
+end
