@@ -30,4 +30,5 @@ function cb_reset(hobj, evt)
 
   guidata(hobj, handles);
   refresh_all_plots(handles);
+  drawnow();
 end
