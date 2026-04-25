@@ -5,11 +5,18 @@
 %% OUTPUTS
 %  none — prints results to stdout
 
-addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'src', 'design'));
-addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'src', 'validation'));
-addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'src', 'plots'));
+pkg load signal;
 
-tests = {};
+root = fileparts(mfilename('fullpath'));
+addpath(fullfile(root, '..', 'src', 'design'));
+addpath(fullfile(root, '..', 'src', 'validation'));
+addpath(fullfile(root, '..', 'src', 'plots'));
+addpath(root);
+
+tests = {
+  'test_design_fir_window',
+  'test_validate_params',
+};
 
 passed = 0;
 failed = 0;
