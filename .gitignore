@@ -1,0 +1,32 @@
+# Planning and code-generation docs (never committed)
+docs/
+
+# Octave session files
+octave-workspace
+*.oct
+*.o
+
+# Compiled autoloads
+PKG_ADD
+PKG_DEL
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor artifacts
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Test output / temp files
+tests/output/
+*.log
+
+# Exported filter files (user-generated, not source)
+*.mat
+*.txt
+!README.md
