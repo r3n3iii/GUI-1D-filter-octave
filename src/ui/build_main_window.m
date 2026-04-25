@@ -48,6 +48,9 @@ function handles = build_main_window()
 
   guidata(fig, handles);
 
+  build_menu(fig);
+  set(handles.btn_reset, 'Callback', @cb_reset);
+
   % Draw default filter on startup
   refresh_all_plots(handles);
 end

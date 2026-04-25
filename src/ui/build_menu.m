@@ -1,0 +1,29 @@
+%% DESCRIPTION
+%  Creates the top menu bar (File: reset, export; Help: about).
+%% INPUTS
+%  fig  handle — main figure handle
+%% OUTPUTS
+%  none
+
+function build_menu(fig)
+  m_file = uimenu(fig, 'Label', 'File');
+  uimenu(m_file, 'Label', 'Reset', ...
+    'Callback', @cb_reset);
+  uimenu(m_file, 'Label', 'Export Coefficients...', ...
+    'Callback', @cb_export_coeffs, ...
+    'Separator', 'on');
+  uimenu(m_file, 'Label', 'Exit', ...
+    'Callback', @(h,e) close(fig), ...
+    'Separator', 'on');
+
+  m_help = uimenu(fig, 'Label', 'Help');
+  uimenu(m_help, 'Label', 'About', ...
+    'Callback', @cb_about);
+end
+
+function cb_about(hobj, evt)
+  msgbox({'Octave Filter Designer', '', ...
+          'An educational FIR/IIR filter design tool.', ...
+          'Requires GNU Octave >= 7.0 + signal package.'}, ...
+         'About', 'help');
+end
