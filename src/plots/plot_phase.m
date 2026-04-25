@@ -1,24 +1,38 @@
 %% DESCRIPTION
-%  Plots the phase response in degrees on the given axes.
+%  Plots the phase response in radians on the given axes.
 %% INPUTS
-%  ax  handle — target axes
-%  b   vector — numerator coefficients
-%  a   vector — denominator coefficients
-%  Fs  scalar — sample rate in Hz
+%  ax         handle  — target axes
+%  b          vector  — numerator coefficients
+%  a          vector  — denominator coefficients
+%  Fs         scalar  — sample rate in Hz
+%  wrapped    logical — true = wrapped [-pi,pi], false = unwrapped continuous
+%  freq_unit  string  — display unit: 'Hz'|'kHz'|'MHz'|'GHz'|'Normalized'
 %% OUTPUTS
 %  none
 
-function plot_phase(ax, b, a, Fs)
+function plot_phase(ax, b, a, Fs, wrapped, freq_unit)
+  if nargin < 5; wrapped   = true; end
+  if nargin < 6; freq_unit = 'Hz'; end
   cla(ax);
 
   [H, f] = freqz(b, a, 512, Fs);
-  phase_deg = angle(H) * 180 / pi;
+  ph = angle(H);
+  if ~wrapped
+    ph = unwrap(ph);
+  end
 
-  plot(ax, f, phase_deg);
+  [scale, freq_lbl] = freq_axis_scale(freq_unit, Fs);
+
+  plot(ax, f / scale, ph);
   grid(ax, 'on');
-  th = title(ax, 'Phase Response');
+  if wrapped
+    lbl = 'Phase Response (wrapped)';
+  else
+    lbl = 'Phase Response (unwrapped)';
+  end
+  th = title(ax, lbl);
   set(th, 'FontSize', 11);
-  xlabel(ax, 'Frequency (Hz)');
-  ylabel(ax, 'Phase (degrees)');
-  xlim(ax, [0 Fs/2]);
+  xlabel(ax, freq_lbl);
+  ylabel(ax, 'Phase (radians)');
+  xlim(ax, [0, Fs/2/scale]);
 end

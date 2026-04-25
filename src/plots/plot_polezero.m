@@ -9,6 +9,7 @@
 
 function plot_polezero(ax, b, a)
   cla(ax);
+  set(ax, 'XLimMode', 'auto', 'YLimMode', 'auto');
   hold(ax, 'on');
 
   % Unit circle

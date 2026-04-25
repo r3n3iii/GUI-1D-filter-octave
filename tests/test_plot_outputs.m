@@ -17,6 +17,7 @@ function test_plot_outputs()
   t_impulse_smoke_iir();
   t_phase_smoke();
   t_group_delay_smoke();
+  t_phase_delay_smoke();
   t_refresh_all_plots();
 end
 
@@ -217,31 +218,40 @@ function t_group_delay_smoke()
   close(fig);
 end
 
+function t_phase_delay_smoke()
+  b = fir1(20, 0.3);
+  fig = figure('visible', 'off');
+  ax  = axes('Parent', fig);
+  try
+    plot_phase_delay(ax, b, 1, 8000);
+    if isempty(get(ax, 'Children'))
+      close(fig);
+      error('t_phase_delay_smoke: axes has no children after plot_phase_delay');
+    end
+  catch e
+    close(fig);
+    rethrow(e);
+  end
+  close(fig);
+end
+
 function t_refresh_all_plots()
-  PLOT_STRINGS = {'Magnitude', 'Phase', 'Group Delay', 'Pole-Zero', 'Impulse'};
   b = fir1(20, 0.3);
   a = 1;
   fig = figure('visible', 'off');
-  handles.b      = b;
-  handles.a      = a;
-  handles.Fs     = 8000;
-  handles.ax_q1  = axes('Parent', fig);
-  handles.ax_q2  = axes('Parent', fig);
-  handles.ax_q3  = axes('Parent', fig);
-  handles.dd_q1  = uicontrol('Parent', fig, 'Style', 'popupmenu', ...
-    'String', PLOT_STRINGS, 'Value', 1, 'Visible', 'off');
-  handles.dd_q2  = uicontrol('Parent', fig, 'Style', 'popupmenu', ...
-    'String', PLOT_STRINGS, 'Value', 4, 'Visible', 'off');
-  handles.dd_q3  = uicontrol('Parent', fig, 'Style', 'popupmenu', ...
-    'String', PLOT_STRINGS, 'Value', 5, 'Visible', 'off');
+  handles.b             = b;
+  handles.a             = a;
+  handles.Fs            = 8000;
+  handles.active_plot   = 'magnitude';
+  handles.phase_wrapped = true;
+  handles.freq_unit     = 'Hz';
+  handles.ax_main       = axes('Parent', fig);
+  handles.tbl_coeffs    = uitable('Parent', fig, 'Visible', 'off');
   try
     refresh_all_plots(handles);
-    for q = 1:3
-      ax_f = sprintf('ax_q%d', q);
-      if isempty(get(handles.(ax_f), 'Children'))
-        close(fig);
-        error('t_refresh_all_plots: %s has no children', ax_f);
-      end
+    if isempty(get(handles.ax_main, 'Children'))
+      close(fig);
+      error('t_refresh_all_plots: ax_main has no children after refresh');
     end
   catch e
     close(fig);

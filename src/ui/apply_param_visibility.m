@@ -1,5 +1,5 @@
 %% DESCRIPTION
-%  Shows/hides parameter widgets based on current filter type and method.
+%  Shows/hides parameter widgets based on current filter type, method, and freq unit.
 %% INPUTS
 %  handles  struct — application state
 %% OUTPUTS
@@ -29,13 +29,39 @@ function apply_param_visibility(handles)
   set(handles.lbl_rs, 'Visible', onoff(show_rs));
   set(handles.ed_rs,  'Visible', onoff(show_rs));
 
-  % Cutoff label hint — two values needed for bandpass/bandstop
-  band_idx  = get(handles.dd_band, 'Value');
-  is_2band  = band_idx >= 3;
-  if is_2band
-    set(handles.lbl_wn, 'String', 'Cutoff Hz [f1 f2]:');
+  % Fs row — hidden in Normalized mode
+  is_norm = strcmp(handles.freq_unit, 'Normalized');
+  set(handles.lbl_fs, 'Visible', onoff(~is_norm));
+  set(handles.ed_fs,  'Visible', onoff(~is_norm));
+
+  % Cutoff and Fs labels — reflect current unit
+  band_idx = get(handles.dd_band, 'Value');
+  is_2band = band_idx >= 3;
+
+  if is_norm
+    unit_str = '(0\x20131)';
+    fs_str   = 'Fs (Hz):';
   else
-    set(handles.lbl_wn, 'String', 'Cutoff (Hz):');
+    UNIT_LABELS = {'Hz', 'kHz', 'MHz', 'GHz'};
+    unit_idx = get(handles.dd_freq_unit, 'Value');
+    unit_str = UNIT_LABELS{unit_idx};
+    fs_str   = sprintf('Fs (%s):', unit_str);
+    set(handles.lbl_fs, 'String', fs_str);
+  end
+
+  if is_norm
+    if is_2band
+      set(handles.lbl_wn, 'String', 'Cutoff 0-1 [f1 f2]:');
+    else
+      set(handles.lbl_wn, 'String', 'Cutoff (0-1):');
+    end
+  else
+    if is_2band
+      set(handles.lbl_wn, 'String', sprintf('Cutoff %s [f1 f2]:', unit_str));
+    else
+      set(handles.lbl_wn, 'String', sprintf('Cutoff (%s):', unit_str));
+    end
+    set(handles.lbl_fs, 'String', fs_str);
   end
 end
 

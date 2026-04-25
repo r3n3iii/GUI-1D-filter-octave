@@ -52,6 +52,9 @@ function handles = build_main_window()
   handles.Rs            = 40;
   handles.b             = fir1(40, handles.Wn);
   handles.a             = 1;
+  handles.active_plot   = 'magnitude';
+  handles.phase_wrapped = true;
+  handles.freq_unit     = 'Hz';
 
   guidata(fig, handles);
 
@@ -62,13 +65,19 @@ function handles = build_main_window()
   set(handles.rb_fir,      'Callback', @cb_filter_type);
   set(handles.rb_iir,      'Callback', @cb_filter_type);
   set(handles.dd_method,   'Callback', @cb_method_changed);
-  set(handles.dd_band,     'Callback', @(h,e) apply_param_visibility(guidata(h)));
-  set(handles.dd_window,   'Callback', @(h,e) apply_param_visibility(guidata(h)));
-  set(handles.dd_q1,       'Callback', @cb_quad_changed);
-  set(handles.dd_q2,       'Callback', @cb_quad_changed);
-  set(handles.dd_q3,       'Callback', @cb_quad_changed);
+  set(handles.dd_band,      'Callback', @(h,e) apply_param_visibility(guidata(h)));
+  set(handles.dd_window,    'Callback', @(h,e) apply_param_visibility(guidata(h)));
+  set(handles.dd_freq_unit, 'Callback', @cb_freq_unit_changed);
   set(handles.ed_order,    'Callback', @cb_order_changed);
   set(handles.ed_wn,       'Callback', @cb_freq_changed);
+
+  PLOT_KEYS = {'magnitude','phase','phase_delay','group_delay', ...
+               'polezero','impulse','coefficients'};
+  for i = 1:numel(handles.btns_plot)
+    key = PLOT_KEYS{i};
+    set(handles.btns_plot(i), 'Callback', @(h,e) cb_plot_select(h, key));
+  end
+  set(handles.btn_phase_wrap, 'Callback', @cb_phase_wrap_toggle);
 
   apply_param_visibility(handles);
 

@@ -41,18 +41,28 @@ end
 % --- helpers ---------------------------------------------------------------
 
 function handles = read_ui_params(handles)
-  BAND_KEYS = {'low', 'high', 'bandpass', 'stop'};
-  WIN_KEYS  = {'hamming', 'hann', 'blackman', 'kaiser', 'rectangular'};
+  BAND_KEYS   = {'low', 'high', 'bandpass', 'stop'};
+  WIN_KEYS    = {'hamming', 'hann', 'blackman', 'kaiser', 'rectangular'};
+  UNIT_SCALES = [1, 1e3, 1e6, 1e9];   % Hz, kHz, MHz, GHz
 
   handles.filter_order = max(1, round(str2double(get(handles.ed_order, 'String'))));
-  handles.Fs           = str2double(get(handles.ed_fs, 'String'));
-  cutoff_hz            = str2num(get(handles.ed_wn, 'String'));
-  handles.Wn           = cutoff_hz / (handles.Fs / 2);   % normalize to (0,1)
   handles.band_type    = BAND_KEYS{get(handles.dd_band, 'Value')};
   handles.window_type  = WIN_KEYS{get(handles.dd_window, 'Value')};
   handles.kaiser_beta  = str2double(get(handles.ed_kaiser, 'String'));
   handles.Rp           = str2double(get(handles.ed_rp, 'String'));
   handles.Rs           = str2double(get(handles.ed_rs, 'String'));
+
+  unit_idx = get(handles.dd_freq_unit, 'Value');
+  if unit_idx == 5   % Normalized
+    handles.Wn = str2num(get(handles.ed_wn, 'String'));
+    % Fs stays unchanged; Wn is already in (0,1)
+  else
+    scale          = UNIT_SCALES(unit_idx);
+    handles.Fs     = str2double(get(handles.ed_fs, 'String')) * scale;
+    cutoff_hz      = str2num(get(handles.ed_wn, 'String')) * scale;
+    handles.Wn     = cutoff_hz / (handles.Fs / 2);
+  end
+  handles.freq_unit = handles.freq_unit;   % already in handles, no change needed
 end
 
 function [b, a] = call_design(handles)
