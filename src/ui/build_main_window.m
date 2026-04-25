@@ -58,6 +58,7 @@ function handles = build_main_window()
   build_menu(fig);
   set(handles.btn_reset,   'Callback', @cb_reset);
   set(handles.btn_design,  'Callback', @cb_design_clicked);
+  set(handles.btn_export,  'Callback', @cb_export_coeffs);
   set(handles.rb_fir,      'Callback', @cb_filter_type);
   set(handles.rb_iir,      'Callback', @cb_filter_type);
   set(handles.dd_method,   'Callback', @cb_method_changed);
