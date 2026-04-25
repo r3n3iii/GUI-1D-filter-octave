@@ -11,6 +11,13 @@ function cb_reset(hobj, evt)
 
   handles.filter_type   = 'FIR';
   handles.design_method = 'window';
+  handles.filter_order  = 40;
+  handles.Wn            = 0.3;
+  handles.band_type     = 'low';
+  handles.window_type   = 'hamming';
+  handles.kaiser_beta   = 5;
+  handles.Rp            = 1;
+  handles.Rs            = 40;
   handles.b             = fir1(40, 0.3);
   handles.a             = 1;
   handles.Fs            = 2;

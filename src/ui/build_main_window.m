@@ -42,6 +42,13 @@ function handles = build_main_window()
   handles.fig           = fig;
   handles.filter_type   = 'FIR';
   handles.design_method = 'window';
+  handles.filter_order  = 40;
+  handles.Wn            = 0.3;
+  handles.band_type     = 'low';
+  handles.window_type   = 'hamming';
+  handles.kaiser_beta   = 5;
+  handles.Rp            = 1;
+  handles.Rs            = 40;
   handles.b             = fir1(40, 0.3);
   handles.a             = 1;
   handles.Fs            = 2;
@@ -50,10 +57,13 @@ function handles = build_main_window()
 
   build_menu(fig);
   set(handles.btn_reset,   'Callback', @cb_reset);
+  set(handles.btn_design,  'Callback', @cb_design_clicked);
   set(handles.rb_fir,      'Callback', @cb_filter_type);
   set(handles.rb_iir,      'Callback', @cb_filter_type);
   set(handles.dd_method,   'Callback', @cb_method_changed);
   set(handles.dd_window,   'Callback', @(h,e) apply_param_visibility(guidata(h)));
+  set(handles.ed_order,    'Callback', @cb_order_changed);
+  set(handles.ed_wn,       'Callback', @cb_freq_changed);
 
   apply_param_visibility(handles);
 
