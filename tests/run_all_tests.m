@@ -18,6 +18,8 @@ tests = {
   'test_design_fir_ls',
   'test_design_fir_pm',
   'test_design_iir_butter',
+  'test_design_iir_cheby1',
+  'test_design_iir_cheby2',
   'test_validate_params',
 };
 

@@ -32,6 +32,12 @@ function test_validate_params()
   t_iir_wn_out_of_range();
   t_iir_bandpass_scalar_wn();
   t_iir_bandpass_wn_reversed();
+  % --- IIR: Chebyshev ripple validation ---
+  t_iir_cheby1_valid();
+  t_iir_cheby1_rp_zero();
+  t_iir_cheby1_rp_negative();
+  t_iir_cheby2_valid();
+  t_iir_cheby2_rs_zero();
 end
 
 function t_fir_valid_lowpass()
@@ -246,6 +252,58 @@ function t_iir_bandpass_wn_reversed()
   r = validate_params(h);
   if r.ok
     error('t_iir_bandpass_wn_reversed: should fail — Wn(1) must be < Wn(2)');
+  end
+end
+
+% --- IIR: Chebyshev ripple validation ---
+
+function t_iir_cheby1_valid()
+  h = base_iir_handles();
+  h.design_method = 'cheby1';
+  h.Rp = 1;
+  r = validate_params(h);
+  if ~r.ok
+    error('t_iir_cheby1_valid: expected ok, got: %s', r.message);
+  end
+end
+
+function t_iir_cheby1_rp_zero()
+  h = base_iir_handles();
+  h.design_method = 'cheby1';
+  h.Rp = 0;
+  r = validate_params(h);
+  if r.ok
+    error('t_iir_cheby1_rp_zero: should fail for Rp=0');
+  end
+end
+
+function t_iir_cheby1_rp_negative()
+  h = base_iir_handles();
+  h.design_method = 'cheby1';
+  h.Rp = -1;
+  r = validate_params(h);
+  if r.ok
+    error('t_iir_cheby1_rp_negative: should fail for Rp=-1');
+  end
+end
+
+function t_iir_cheby2_valid()
+  h = base_iir_handles();
+  h.design_method = 'cheby2';
+  h.Rs = 40;
+  r = validate_params(h);
+  if ~r.ok
+    error('t_iir_cheby2_valid: expected ok, got: %s', r.message);
+  end
+end
+
+function t_iir_cheby2_rs_zero()
+  h = base_iir_handles();
+  h.design_method = 'cheby2';
+  h.Rs = 0;
+  r = validate_params(h);
+  if r.ok
+    error('t_iir_cheby2_rs_zero: should fail for Rs=0');
   end
 end
 
