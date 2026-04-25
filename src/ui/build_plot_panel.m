@@ -1,46 +1,52 @@
 %% DESCRIPTION
-%  Creates the right panel: four axes and the coefficient table.
+%  Creates the right panel: three selectable plot quadrants and a fixed
+%  coefficient table in the bottom-right.
 %% INPUTS
 %  parent   handle — parent container
 %% OUTPUTS
-%  handles  struct — axes handles (ax_mag, ax_pz, ax_imp) and table handle
+%  handles  struct — axes (ax_q1/q2/q3), dropdowns (dd_q1/q2/q3), tbl_coeffs
 
 function handles = build_plot_panel(parent)
   handles = struct();
-  TITLE_SIZE = 11;
+  TITLE_SIZE   = 11;
+  PLOT_STRINGS = {'Magnitude', 'Phase', 'Group Delay', 'Pole-Zero', 'Impulse'};
 
-  handles.ax_mag = axes('Parent', parent, ...
-    'Units', 'normalized', 'Position', [0.05 0.55 0.42 0.38]);
-  th = title(handles.ax_mag, 'Magnitude Response');
-  set(th, 'FontSize', TITLE_SIZE);
-  xlabel(handles.ax_mag, 'Frequency');
-  ylabel(handles.ax_mag, 'Magnitude (dB)');
-  grid(handles.ax_mag, 'on');
+  % ---- Top-left (Q1) — default: Magnitude --------------------------------
+  handles.dd_q1 = uicontrol('Parent', parent, 'Style', 'popupmenu', ...
+    'Units', 'normalized', 'Position', [0.03 0.94 0.44 0.04], ...
+    'String', PLOT_STRINGS, 'Value', 1, 'Tag', 'dd_q1');
 
-  handles.ax_pz = axes('Parent', parent, ...
-    'Units', 'normalized', 'Position', [0.55 0.55 0.42 0.38]);
-  th = title(handles.ax_pz, 'Pole-Zero Plot');
-  set(th, 'FontSize', TITLE_SIZE);
-  axis(handles.ax_pz, 'equal');
-  grid(handles.ax_pz, 'on');
+  handles.ax_q1 = axes('Parent', parent, ...
+    'Units', 'normalized', 'Position', [0.03 0.51 0.44 0.42]);
+  grid(handles.ax_q1, 'on');
 
-  handles.ax_imp = axes('Parent', parent, ...
-    'Units', 'normalized', 'Position', [0.05 0.05 0.42 0.38]);
-  th = title(handles.ax_imp, 'Impulse Response');
-  set(th, 'FontSize', TITLE_SIZE);
-  xlabel(handles.ax_imp, 'Samples (n)');
-  ylabel(handles.ax_imp, 'Amplitude');
-  grid(handles.ax_imp, 'on');
+  % ---- Top-right (Q2) — default: Pole-Zero --------------------------------
+  handles.dd_q2 = uicontrol('Parent', parent, 'Style', 'popupmenu', ...
+    'Units', 'normalized', 'Position', [0.53 0.94 0.44 0.04], ...
+    'String', PLOT_STRINGS, 'Value', 4, 'Tag', 'dd_q2');
 
-  % Coefficient table (bottom-right quadrant)
+  handles.ax_q2 = axes('Parent', parent, ...
+    'Units', 'normalized', 'Position', [0.53 0.51 0.44 0.42]);
+  grid(handles.ax_q2, 'on');
+
+  % ---- Bottom-left (Q3) — default: Impulse --------------------------------
+  handles.dd_q3 = uicontrol('Parent', parent, 'Style', 'popupmenu', ...
+    'Units', 'normalized', 'Position', [0.03 0.46 0.44 0.04], ...
+    'String', PLOT_STRINGS, 'Value', 5, 'Tag', 'dd_q3');
+
+  handles.ax_q3 = axes('Parent', parent, ...
+    'Units', 'normalized', 'Position', [0.03 0.04 0.44 0.41]);
+  grid(handles.ax_q3, 'on');
+
+  % ---- Bottom-right — fixed: Coefficients ---------------------------------
   uicontrol('Parent', parent, 'Style', 'text', ...
-    'Units', 'normalized', 'Position', [0.55 0.41 0.42 0.03], ...
+    'Units', 'normalized', 'Position', [0.53 0.46 0.44 0.04], ...
     'String', 'Coefficients', ...
     'FontWeight', 'bold', 'FontSize', TITLE_SIZE, ...
     'HorizontalAlignment', 'center');
 
   handles.tbl_coeffs = uitable('Parent', parent, ...
-    'Units', 'normalized', 'Position', [0.55 0.05 0.42 0.36], ...
+    'Units', 'normalized', 'Position', [0.53 0.04 0.44 0.41], ...
     'ColumnName', {'Index', 'b (num)', 'a (den)'}, ...
     'ColumnWidth', {40, 90, 90}, ...
     'RowName', {}, ...

@@ -64,6 +64,9 @@ function handles = build_main_window()
   set(handles.dd_method,   'Callback', @cb_method_changed);
   set(handles.dd_band,     'Callback', @(h,e) apply_param_visibility(guidata(h)));
   set(handles.dd_window,   'Callback', @(h,e) apply_param_visibility(guidata(h)));
+  set(handles.dd_q1,       'Callback', @cb_quad_changed);
+  set(handles.dd_q2,       'Callback', @cb_quad_changed);
+  set(handles.dd_q3,       'Callback', @cb_quad_changed);
   set(handles.ed_order,    'Callback', @cb_order_changed);
   set(handles.ed_wn,       'Callback', @cb_freq_changed);
 
