@@ -6,11 +6,12 @@
 %  result  struct — .ok (bool), .message (string)
 
 function result = validate_params(handles)
-  params.order = handles.filter_order;
-  params.Wn    = handles.Wn;
-  params.band  = handles.band_type;
-  params.Rp    = handles.Rp;
-  params.Rs    = handles.Rs;
+  params.order  = handles.filter_order;
+  params.Wn     = handles.Wn;
+  params.band   = handles.band_type;
+  params.Rp     = handles.Rp;
+  params.Rs     = handles.Rs;
+  params.method = handles.design_method;
 
   if strcmp(handles.filter_type, 'FIR')
     params.window = handles.window_type;

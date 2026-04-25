@@ -17,6 +17,7 @@ tests = {
   'test_design_fir_window',
   'test_design_fir_ls',
   'test_design_fir_pm',
+  'test_design_iir_butter',
   'test_validate_params',
 };
 
