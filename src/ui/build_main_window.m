@@ -49,7 +49,13 @@ function handles = build_main_window()
   guidata(fig, handles);
 
   build_menu(fig);
-  set(handles.btn_reset, 'Callback', @cb_reset);
+  set(handles.btn_reset,   'Callback', @cb_reset);
+  set(handles.rb_fir,      'Callback', @cb_filter_type);
+  set(handles.rb_iir,      'Callback', @cb_filter_type);
+  set(handles.dd_method,   'Callback', @cb_method_changed);
+  set(handles.dd_window,   'Callback', @(h,e) apply_param_visibility(guidata(h)));
+
+  apply_param_visibility(handles);
 
   % Draw default filter on startup
   refresh_all_plots(handles);
