@@ -22,6 +22,7 @@ tests = {
   'test_design_iir_cheby2',
   'test_design_iir_ellip',
   'test_validate_params',
+  'test_plot_outputs',
 };
 
 passed = 0;
