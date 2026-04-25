@@ -12,23 +12,23 @@ function cb_reset(hobj, evt)
   handles.filter_type   = 'FIR';
   handles.design_method = 'window';
   handles.filter_order  = 40;
-  handles.Wn            = 0.3;
+  handles.Fs            = 8000;
+  handles.Wn            = 1000 / (8000/2);
   handles.band_type     = 'low';
   handles.window_type   = 'hamming';
   handles.kaiser_beta   = 5;
   handles.Rp            = 1;
   handles.Rs            = 40;
-  handles.b             = fir1(40, 0.3);
+  handles.b             = fir1(40, handles.Wn);
   handles.a             = 1;
-  handles.Fs            = 2;
 
   set(handles.rb_fir,    'Value', 1);
   set(handles.rb_iir,    'Value', 0);
   set(handles.dd_method, 'String', {'Window', 'Least-Squares', 'Parks-McClellan'}, 'Value', 1);
   set(handles.dd_band,   'Value', 1);
   set(handles.ed_order,  'String', '40');
-  set(handles.ed_wn,     'String', '0.3');
-  set(handles.ed_fs,     'String', '2');
+  set(handles.ed_wn,     'String', '1000');
+  set(handles.ed_fs,     'String', '8000');
   set(handles.dd_window, 'Value', 1, 'Visible', 'on');
   set(handles.ed_kaiser, 'Visible', 'off');
   set(handles.ed_rp,     'Visible', 'off');

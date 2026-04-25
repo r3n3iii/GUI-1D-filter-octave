@@ -43,15 +43,15 @@ function handles = build_main_window()
   handles.filter_type   = 'FIR';
   handles.design_method = 'window';
   handles.filter_order  = 40;
-  handles.Wn            = 0.3;
+  handles.Fs            = 8000;
+  handles.Wn            = 1000 / (8000/2);   % 0.25 normalized
   handles.band_type     = 'low';
   handles.window_type   = 'hamming';
   handles.kaiser_beta   = 5;
   handles.Rp            = 1;
   handles.Rs            = 40;
-  handles.b             = fir1(40, 0.3);
+  handles.b             = fir1(40, handles.Wn);
   handles.a             = 1;
-  handles.Fs            = 2;
 
   guidata(fig, handles);
 

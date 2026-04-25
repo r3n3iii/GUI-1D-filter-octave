@@ -37,8 +37,9 @@ function handles = read_ui_params(handles)
   WIN_KEYS  = {'hamming', 'hann', 'blackman', 'kaiser', 'rectangular'};
 
   handles.filter_order = max(1, round(str2double(get(handles.ed_order, 'String'))));
-  handles.Wn           = str2num(get(handles.ed_wn, 'String'));
   handles.Fs           = str2double(get(handles.ed_fs, 'String'));
+  cutoff_hz            = str2num(get(handles.ed_wn, 'String'));
+  handles.Wn           = cutoff_hz / (handles.Fs / 2);   % normalize to (0,1)
   handles.band_type    = BAND_KEYS{get(handles.dd_band, 'Value')};
   handles.window_type  = WIN_KEYS{get(handles.dd_window, 'Value')};
   handles.kaiser_beta  = str2double(get(handles.ed_kaiser, 'String'));

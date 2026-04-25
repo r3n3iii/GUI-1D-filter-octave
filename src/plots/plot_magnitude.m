@@ -19,11 +19,6 @@ function plot_magnitude(ax, b, a, Fs)
   title(ax, 'Magnitude Response');
   ylabel(ax, 'Magnitude (dB)');
 
-  if Fs == 2
-    xlabel(ax, 'Normalized Frequency (\times\pi rad/sample)');
-    xlim(ax, [0 1]);
-  else
-    xlabel(ax, 'Frequency (Hz)');
-    xlim(ax, [0 Fs/2]);
-  end
+  xlabel(ax, 'Frequency (Hz)');
+  xlim(ax, [0 Fs/2]);
 end

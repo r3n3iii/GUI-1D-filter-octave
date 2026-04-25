@@ -54,15 +54,16 @@ function t_magnitude_smoke_iir()
 end
 
 function t_magnitude_normalized_xlabel()
-  b = fir1(20, 0.3);
+  b  = fir1(20, 0.3);
+  Fs = 2;
   fig = figure('visible', 'off');
   ax  = axes('Parent', fig);
   try
-    plot_magnitude(ax, b, 1, 2);
+    plot_magnitude(ax, b, 1, Fs);
     lim = xlim(ax);
-    if lim(2) ~= 1
+    if lim(2) ~= Fs/2
       close(fig);
-      error('t_magnitude_normalized_xlabel: xlim should end at 1 for Fs=2, got %g', lim(2));
+      error('t_magnitude_normalized_xlabel: xlim should end at %g for Fs=%g, got %g', Fs/2, Fs, lim(2));
     end
   catch e
     close(fig);
