@@ -38,6 +38,10 @@ function test_validate_params()
   t_iir_cheby1_rp_negative();
   t_iir_cheby2_valid();
   t_iir_cheby2_rs_zero();
+  % --- IIR: Elliptic validation ---
+  t_iir_ellip_valid();
+  t_iir_ellip_rp_zero();
+  t_iir_ellip_rs_le_rp();
 end
 
 function t_fir_valid_lowpass()
@@ -304,6 +308,41 @@ function t_iir_cheby2_rs_zero()
   r = validate_params(h);
   if r.ok
     error('t_iir_cheby2_rs_zero: should fail for Rs=0');
+  end
+end
+
+% --- IIR: Elliptic validation ---
+
+function t_iir_ellip_valid()
+  h = base_iir_handles();
+  h.design_method = 'ellip';
+  h.Rp = 1;
+  h.Rs = 40;
+  r = validate_params(h);
+  if ~r.ok
+    error('t_iir_ellip_valid: expected ok, got: %s', r.message);
+  end
+end
+
+function t_iir_ellip_rp_zero()
+  h = base_iir_handles();
+  h.design_method = 'ellip';
+  h.Rp = 0;
+  h.Rs = 40;
+  r = validate_params(h);
+  if r.ok
+    error('t_iir_ellip_rp_zero: should fail for Rp=0');
+  end
+end
+
+function t_iir_ellip_rs_le_rp()
+  h = base_iir_handles();
+  h.design_method = 'ellip';
+  h.Rp = 3;
+  h.Rs = 2;
+  r = validate_params(h);
+  if r.ok
+    error('t_iir_ellip_rs_le_rp: should fail when Rs <= Rp');
   end
 end
 

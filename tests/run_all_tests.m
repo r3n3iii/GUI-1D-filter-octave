@@ -20,6 +20,7 @@ tests = {
   'test_design_iir_butter',
   'test_design_iir_cheby1',
   'test_design_iir_cheby2',
+  'test_design_iir_ellip',
   'test_validate_params',
 };
 
