@@ -10,16 +10,20 @@ function apply_param_visibility(handles)
   method = handles.design_method;
 
   show_window = is_fir && strcmp(method, 'window');
-  set(handles.dd_window, 'Visible', onoff(show_window));
+  set(handles.lbl_window, 'Visible', onoff(show_window));
+  set(handles.dd_window,  'Visible', onoff(show_window));
 
   is_kaiser = show_window && (get(handles.dd_window, 'Value') == 4);
-  set(handles.ed_kaiser, 'Visible', onoff(is_kaiser));
+  set(handles.lbl_kaiser, 'Visible', onoff(is_kaiser));
+  set(handles.ed_kaiser,  'Visible', onoff(is_kaiser));
 
   show_rp = ~is_fir && any(strcmp(method, {'cheby1', 'ellip'}));
-  set(handles.ed_rp, 'Visible', onoff(show_rp));
+  set(handles.lbl_rp, 'Visible', onoff(show_rp));
+  set(handles.ed_rp,  'Visible', onoff(show_rp));
 
   show_rs = ~is_fir && any(strcmp(method, {'cheby2', 'ellip'}));
-  set(handles.ed_rs, 'Visible', onoff(show_rs));
+  set(handles.lbl_rs, 'Visible', onoff(show_rs));
+  set(handles.ed_rs,  'Visible', onoff(show_rs));
 end
 
 function s = onoff(val)
