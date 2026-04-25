@@ -27,32 +27,41 @@ filterdesigner
 The window is split into two panels:
 
 **Left — Control Panel**
+
 | Control | Description |
 |---------|-------------|
 | FIR / IIR | Selects the filter family |
 | Method | Design algorithm (changes with filter type) |
 | Band | Lowpass / Highpass / Bandpass / Bandstop |
 | Order | Filter order (integer ≥ 1) |
-| Cutoff (Hz) | Cutoff frequency in Hz. For Bandpass/Bandstop enter two values: `f1 f2` |
-| Fs (Hz) | Sample rate in Hz (default 8000) |
+| Cutoff | Cutoff frequency in the selected unit. For Bandpass/Bandstop enter two values: `f1 f2` |
+| Fs | Sample rate in the selected unit (default 8000 Hz) |
+| Freq Unit | Display unit for all frequency fields and plot axes: Hz / kHz / MHz / GHz / Normalized. Switching unit converts displayed values live without redesigning the filter. In Normalized mode, cutoff is entered as Wn ∈ (0, 1) and the Fs field is hidden. |
 | Window | Window function — visible for FIR Window method only |
 | Kaiser β | Kaiser window shape — visible when Kaiser is selected |
 | Rp (dB) | Passband ripple — visible for Chebyshev I and Elliptic |
 | Rs (dB) | Stopband attenuation — visible for Chebyshev II and Elliptic |
-| Design Filter | Runs validation and updates all plots |
-| Reset | Restores all controls to defaults |
-| Export | Exports b/a to workspace, .mat, or .txt |
+| Design Filter | Runs validation and updates the plot |
+| Reset | Restores all controls and plots to defaults |
+| Export | Exports b/a coefficients to workspace, .mat, or .txt |
+
+A red stability warning appears if any pole lies outside the unit circle.
 
 **Right — Plot Panel**
 
-| Panel | Content |
-|-------|---------|
-| Magnitude Response | Frequency response in dB vs Hz |
-| Pole-Zero Plot | Roots of b (○) and a (×) on the z-plane |
-| Impulse Response | Output to a unit impulse |
-| Coefficients | Scrollable table of b and a vectors |
+A button strip across the top selects which plot is displayed in the large area below:
 
-A red stability warning appears in the control panel if any pole lies outside the unit circle.
+| Button | Content |
+|--------|---------|
+| Magnitude | Frequency response in dB |
+| Phase | Phase response in radians. A **Wrapped / Unwrapped** toggle appears when this plot is active |
+| Ph. Delay | Phase delay in samples (−∠H(ω) / ω) |
+| Grp. Delay | Group delay in samples (−d∠H(ω)/dω) |
+| Pole-Zero | Roots of b (○) and roots of a (×) on the z-plane with unit circle |
+| Impulse | Filter output to a unit impulse |
+| Coefficients | Scrollable table of b (numerator) and a (denominator) vectors |
+
+The frequency axis on all plots reflects the active **Freq Unit** selection.
 
 ## Supported Design Methods
 
@@ -86,14 +95,18 @@ filterdesigner.m       Entry point
 src/
   design/              One file per design method
   validation/          validate_params, validate_fir, validate_iir
-  plots/               plot_magnitude, plot_polezero, plot_impulse,
+  plots/               plot_magnitude, plot_phase, plot_phase_delay,
+                       plot_group_delay, plot_polezero, plot_impulse,
+                       render_plot, freq_axis_scale,
                        update_coeff_table, refresh_all_plots
   ui/                  build_main_window, build_control_panel,
                        build_plot_panel, build_menu,
                        apply_param_visibility
   callbacks/           cb_design_clicked, cb_filter_type,
                        cb_method_changed, cb_reset, cb_export_coeffs,
-                       cb_order_changed, cb_freq_changed
+                       cb_order_changed, cb_freq_changed,
+                       cb_plot_select, cb_phase_wrap_toggle,
+                       cb_freq_unit_changed
 tests/
   run_all_tests.m      Test runner
   assert_near.m        Numeric tolerance helper
