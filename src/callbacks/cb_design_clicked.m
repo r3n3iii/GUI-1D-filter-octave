@@ -25,6 +25,14 @@ function cb_design_clicked(hobj, evt)
 
   handles.b = b;
   handles.a = a;
+
+  poles = roots(a);
+  if any(abs(poles) > 1)
+    set(handles.lbl_stability, 'String', 'WARNING: Unstable filter (poles outside unit circle)', 'Visible', 'on');
+  else
+    set(handles.lbl_stability, 'Visible', 'off');
+  end
+
   guidata(hobj, handles);
   refresh_all_plots(handles);
   drawnow();
