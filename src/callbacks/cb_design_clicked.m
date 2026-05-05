@@ -76,7 +76,7 @@ function [b, a] = call_design(handles)
 
   switch handles.design_method
     case 'window';  [b, a] = design_fir_window(params);
-    case 'ls';      [b, a] = design_fir_ls(params);
+    case 'ls';      [b, a] = design_fir_ls(build_ls_params(params));
     case 'pm';      [b, a] = design_fir_pm(params);
     case 'butter';  [b, a] = design_iir_butter(params);
     case 'cheby1';  [b, a] = design_iir_cheby1(params);
@@ -84,4 +84,28 @@ function [b, a] = call_design(handles)
     case 'ellip';   [b, a] = design_iir_ellip(params);
     otherwise;      error('Unknown design method: %s', handles.design_method);
   end
+end
+
+function p = build_ls_params(params)
+  % Translate generic Wn/band params into the F/A/W vectors that firls expects.
+  % F is normalized in [0,1] where 1 = Nyquist.
+  Wn   = params.Wn;
+  p.order = params.order;
+  switch params.band
+    case 'low'
+      p.F = [0, Wn(1), Wn(1), 1];
+      p.A = [1, 1,     0,     0];
+    case 'high'
+      p.F = [0, Wn(1), Wn(1), 1];
+      p.A = [0, 0,     1,     1];
+    case 'bandpass'
+      p.F = [0, Wn(1), Wn(1), Wn(2), Wn(2), 1];
+      p.A = [0, 0,     1,     1,     0,     0];
+    case 'stop'
+      p.F = [0, Wn(1), Wn(1), Wn(2), Wn(2), 1];
+      p.A = [1, 1,     0,     0,     1,     1];
+    otherwise
+      error('build_ls_params: unknown band type ''%s''', params.band);
+  end
+  p.W = ones(1, numel(p.F) / 2);
 end
