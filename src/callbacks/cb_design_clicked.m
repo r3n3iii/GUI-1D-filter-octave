@@ -49,20 +49,29 @@ function handles = read_ui_params(handles)
   handles.band_type    = BAND_KEYS{get(handles.dd_band, 'Value')};
   handles.window_type  = WIN_KEYS{get(handles.dd_window, 'Value')};
   handles.kaiser_beta  = str2double(get(handles.ed_kaiser, 'String'));
-  handles.Rp           = str2double(get(handles.ed_rp, 'String'));
-  handles.Rs           = str2double(get(handles.ed_rs, 'String'));
+  handles.Rp           = str2double(get(handles.ed_rp,     'String'));
+  handles.Rs           = str2double(get(handles.ed_rs,     'String'));
+  handles.Wpass        = str2double(get(handles.ed_wpass,  'String'));
+  handles.Wstop        = str2double(get(handles.ed_wstop,  'String'));
 
   unit_idx = get(handles.dd_freq_unit, 'Value');
   if unit_idx == 5   % Normalized
-    handles.Wn = str2num(get(handles.ed_wn, 'String'));
-    % Fs stays unchanged; Wn is already in (0,1)
+    handles.Wn    = str2num(get(handles.ed_wn,    'String'));   %#ok<ST2NM>
+    handles.fpass  = str2double(get(handles.ed_fpass,  'String'));
+    handles.fstop  = str2double(get(handles.ed_fstop,  'String'));
+    handles.fpass2 = str2double(get(handles.ed_fpass2, 'String'));
+    handles.fstop2 = str2double(get(handles.ed_fstop2, 'String'));
   else
-    scale          = UNIT_SCALES(unit_idx);
-    handles.Fs     = str2double(get(handles.ed_fs, 'String')) * scale;
-    cutoff_hz      = str2num(get(handles.ed_wn, 'String')) * scale;
-    handles.Wn     = cutoff_hz / (handles.Fs / 2);
+    scale         = UNIT_SCALES(unit_idx);
+    handles.Fs    = str2double(get(handles.ed_fs, 'String')) * scale;
+    cutoff_hz     = str2num(get(handles.ed_wn, 'String')) * scale;   %#ok<ST2NM>
+    Nyq           = handles.Fs / 2;
+    handles.Wn    = cutoff_hz / Nyq;
+    handles.fpass  = str2double(get(handles.ed_fpass,  'String')) * scale / Nyq;
+    handles.fstop  = str2double(get(handles.ed_fstop,  'String')) * scale / Nyq;
+    handles.fpass2 = str2double(get(handles.ed_fpass2, 'String')) * scale / Nyq;
+    handles.fstop2 = str2double(get(handles.ed_fstop2, 'String')) * scale / Nyq;
   end
-  handles.freq_unit = handles.freq_unit;   % already in handles, no change needed
 end
 
 function [b, a] = call_design(handles)
@@ -76,8 +85,8 @@ function [b, a] = call_design(handles)
 
   switch handles.design_method
     case 'window';  [b, a] = design_fir_window(params);
-    case 'ls';      [b, a] = design_fir_ls(build_ls_params(params));
-    case 'pm';      [b, a] = design_fir_pm(params);
+    case 'ls';      [b, a] = design_fir_ls(build_band_params(handles));
+    case 'pm';      [b, a] = design_fir_pm(build_band_params(handles));
     case 'butter';  [b, a] = design_iir_butter(params);
     case 'cheby1';  [b, a] = design_iir_cheby1(params);
     case 'cheby2';  [b, a] = design_iir_cheby2(params);
@@ -86,26 +95,41 @@ function [b, a] = call_design(handles)
   end
 end
 
-function p = build_ls_params(params)
-  % Translate generic Wn/band params into the F/A/W vectors that firls expects.
-  % F is normalized in [0,1] where 1 = Nyquist.
-  Wn   = params.Wn;
-  p.order = params.order;
-  switch params.band
+% Builds F/A/W band vectors for firls / remez from the explicit band-edge fields.
+% F is normalized [0,1] where 1 = Nyquist.  F must be monotonically non-decreasing.
+%
+% Band-edge semantics (MATLAB convention, low-to-high):
+%   lowpass:  fpass  | fstop
+%   highpass: fstop  | fpass      (fstop < fpass)
+%   bandpass: fstop1 | fpass1 | fpass2 | fstop2
+%   bandstop: fpass1 | fstop1 | fstop2 | fpass2
+function p = build_band_params(handles)
+  p.order = handles.filter_order;
+  f1 = handles.fpass;
+  f2 = handles.fstop;
+  f3 = handles.fpass2;
+  f4 = handles.fstop2;
+  Wp = handles.Wpass;
+  Ws = handles.Wstop;
+
+  switch handles.band_type
     case 'low'
-      p.F = [0, Wn(1), Wn(1), 1];
-      p.A = [1, 1,     0,     0];
+      p.F = [0, f1, f2, 1];
+      p.A = [1, 1,  0, 0];
+      p.W = [Wp, Ws];
     case 'high'
-      p.F = [0, Wn(1), Wn(1), 1];
-      p.A = [0, 0,     1,     1];
+      p.F = [0, f1, f2, 1];
+      p.A = [0, 0,  1, 1];
+      p.W = [Ws, Wp];
     case 'bandpass'
-      p.F = [0, Wn(1), Wn(1), Wn(2), Wn(2), 1];
-      p.A = [0, 0,     1,     1,     0,     0];
+      p.F = [0, f1, f2, f3, f4, 1];
+      p.A = [0, 0,  1,  1,  0, 0];
+      p.W = [Ws, Wp, Ws];
     case 'stop'
-      p.F = [0, Wn(1), Wn(1), Wn(2), Wn(2), 1];
-      p.A = [1, 1,     0,     0,     1,     1];
+      p.F = [0, f1, f2, f3, f4, 1];
+      p.A = [1, 1,  0,  0,  1, 1];
+      p.W = [Wp, Ws, Wp];
     otherwise
-      error('build_ls_params: unknown band type ''%s''', params.band);
+      error('build_band_params: unknown band type ''%s''', handles.band_type);
   end
-  p.W = ones(1, numel(p.F) / 2);
 end
