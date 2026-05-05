@@ -247,6 +247,10 @@ function t_refresh_all_plots()
   handles.freq_unit     = 'Hz';
   handles.ax_main       = axes('Parent', fig);
   handles.tbl_coeffs    = uitable('Parent', fig, 'Visible', 'off');
+  handles.lbl_structure = uicontrol('Parent', fig, 'Style', 'text',    'Visible', 'off');
+  handles.dd_structure  = uicontrol('Parent', fig, 'Style', 'popupmenu', ...
+    'String', {'Direct Form (b/a)', 'Second-Order Sections', 'State-Space'}, ...
+    'Value', 1, 'Visible', 'off');
   try
     refresh_all_plots(handles);
     if isempty(get(handles.ax_main, 'Children'))

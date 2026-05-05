@@ -65,17 +65,19 @@ function handles = build_main_window()
   guidata(fig, handles);
 
   build_menu(fig);
-  set(handles.btn_reset,   'Callback', @cb_reset);
-  set(handles.btn_design,  'Callback', @cb_design_clicked);
-  set(handles.btn_export,  'Callback', @cb_export_coeffs);
-  set(handles.rb_fir,      'Callback', @cb_filter_type);
-  set(handles.rb_iir,      'Callback', @cb_filter_type);
-  set(handles.dd_method,   'Callback', @cb_method_changed);
-  set(handles.dd_band,      'Callback', @(h,e) apply_param_visibility(guidata(h)));
-  set(handles.dd_window,    'Callback', @(h,e) apply_param_visibility(guidata(h)));
-  set(handles.dd_freq_unit, 'Callback', @cb_freq_unit_changed);
-  set(handles.ed_order,    'Callback', @cb_order_changed);
-  set(handles.ed_wn,       'Callback', @cb_freq_changed);
+  set(handles.btn_reset,     'Callback', @cb_reset);
+  set(handles.btn_design,    'Callback', @cb_design_clicked);
+  set(handles.btn_import,    'Callback', @cb_import_coeffs);
+  set(handles.btn_export,    'Callback', @cb_export_coeffs);
+  set(handles.rb_fir,        'Callback', @cb_filter_type);
+  set(handles.rb_iir,        'Callback', @cb_filter_type);
+  set(handles.dd_method,     'Callback', @cb_method_changed);
+  set(handles.dd_band,       'Callback', @(h,e) apply_param_visibility(guidata(h)));
+  set(handles.dd_window,     'Callback', @(h,e) apply_param_visibility(guidata(h)));
+  set(handles.dd_freq_unit,  'Callback', @cb_freq_unit_changed);
+  set(handles.dd_structure,  'Callback', @cb_structure_changed);
+  set(handles.ed_order,      'Callback', @cb_order_changed);
+  set(handles.ed_wn,         'Callback', @cb_freq_changed);
 
   PLOT_KEYS = {'magnitude','phase','phase_delay','group_delay', ...
                'polezero','impulse','coefficients'};
