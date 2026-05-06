@@ -70,6 +70,11 @@ function apply_param_visibility(handles)
   set(handles.lbl_wstop, 'Visible', onoff(is_ls_pm));
   set(handles.ed_wstop,  'Visible', onoff(is_ls_pm));
 
+  % Density factor — PM only
+  is_pm = strcmp(method, 'pm');
+  set(handles.lbl_density, 'Visible', onoff(is_pm));
+  set(handles.ed_density,  'Visible', onoff(is_pm));
+
   % -------------------------------------------------------
   % Update label strings based on freq unit + band type
   % -------------------------------------------------------

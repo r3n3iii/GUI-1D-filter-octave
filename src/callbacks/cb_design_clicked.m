@@ -51,8 +51,9 @@ function handles = read_ui_params(handles)
   handles.kaiser_beta  = str2double(get(handles.ed_kaiser, 'String'));
   handles.Rp           = str2double(get(handles.ed_rp,     'String'));
   handles.Rs           = str2double(get(handles.ed_rs,     'String'));
-  handles.Wpass        = str2double(get(handles.ed_wpass,  'String'));
-  handles.Wstop        = str2double(get(handles.ed_wstop,  'String'));
+  handles.Wpass          = str2double(get(handles.ed_wpass,   'String'));
+  handles.Wstop          = str2double(get(handles.ed_wstop,   'String'));
+  handles.density_factor = max(16, round(str2double(get(handles.ed_density, 'String'))));
 
   unit_idx = get(handles.dd_freq_unit, 'Value');
   if unit_idx == 5   % Normalized
@@ -86,7 +87,7 @@ function [b, a] = call_design(handles)
   switch handles.design_method
     case 'window';  [b, a] = design_fir_window(params);
     case 'ls';      [b, a] = design_fir_ls(build_band_params(handles));
-    case 'pm';      [b, a] = design_fir_pm(build_band_params(handles));
+    case 'pm';      [b, a] = design_fir_pm(build_band_params(handles), handles.density_factor);
     case 'butter';  [b, a] = design_iir_butter(params);
     case 'cheby1';  [b, a] = design_iir_cheby1(params);
     case 'cheby2';  [b, a] = design_iir_cheby2(params);
