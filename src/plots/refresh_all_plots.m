@@ -7,6 +7,10 @@
 
 function refresh_all_plots(handles)
   if strcmp(handles.active_plot, 'coefficients')
+    cla(handles.ax_main);
+    title(handles.ax_main,  '');
+    xlabel(handles.ax_main, '');
+    ylabel(handles.ax_main, '');
     set(handles.ax_main,       'Visible', 'off');
     set(handles.tbl_coeffs,    'Visible', 'on');
     set(handles.lbl_structure, 'Visible', 'on');

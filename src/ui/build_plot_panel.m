@@ -66,7 +66,7 @@ function handles = build_plot_panel(parent)
   % the box inward enough that ylabel+ticks (left) and xlabel+ticks (bottom)
   % are not clipped by the panel boundary.
   axes_pos = [0.11 0.11 0.84 0.77];
-  tbl_pos  = [0.01 0.02 0.98 0.89];
+  tbl_pos  = [0.01 0.02 0.98 0.855];   % top at 0.875, clears structure selector at 0.895
 
   handles.ax_main = axes('Parent', parent, ...
     'Units', 'normalized', 'Position', axes_pos);
