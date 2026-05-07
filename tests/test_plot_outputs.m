@@ -244,6 +244,7 @@ function t_refresh_all_plots()
   handles.Fs            = 8000;
   handles.active_plot   = 'magnitude';
   handles.phase_wrapped = true;
+  handles.mag_linear    = false;
   handles.freq_unit     = 'Hz';
   handles.ax_main       = axes('Parent', fig);
   handles.tbl_coeffs    = uitable('Parent', fig, 'Visible', 'off');
@@ -252,6 +253,8 @@ function t_refresh_all_plots()
   handles.dd_structure  = uicontrol('Parent', fig, 'Style', 'popupmenu', ...
     'String', {'Direct Form (b/a)', 'Second-Order Sections', 'State-Space'}, ...
     'Value', 1, 'Visible', 'off');
+  handles.btn_mag_scale  = uicontrol('Parent', fig, 'Style', 'pushbutton', 'Visible', 'off');
+  handles.btn_phase_wrap = uicontrol('Parent', fig, 'Style', 'pushbutton', 'Visible', 'off');
   try
     refresh_all_plots(handles);
     if isempty(get(handles.ax_main, 'Children'))

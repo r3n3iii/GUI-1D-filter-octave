@@ -23,9 +23,14 @@ function cb_plot_select(hobj, key)
     end
   end
 
-  if strcmp(key, 'phase')
+  if strcmp(key, 'magnitude')
+    set(handles.btn_mag_scale,  'Visible', 'on');
+    set(handles.btn_phase_wrap, 'Visible', 'off');
+  elseif strcmp(key, 'phase')
+    set(handles.btn_mag_scale,  'Visible', 'off');
     set(handles.btn_phase_wrap, 'Visible', 'on');
   else
+    set(handles.btn_mag_scale,  'Visible', 'off');
     set(handles.btn_phase_wrap, 'Visible', 'off');
   end
 

@@ -59,14 +59,14 @@ A button strip across the top selects which view is displayed in the large area 
 
 | Button | Content |
 |--------|---------|
-| Magnitude | Frequency response in dB |
+| Magnitude | Frequency response in dB. A **dB / Linear** toggle switches the y-axis between logarithmic (dB) and linear (0–1) scale. |
 | Phase | Phase response in radians. A **Wrapped / Unwrapped** toggle appears when this plot is active. |
 | Ph. Delay | Phase delay in samples (−∠H(ω) / ω) |
 | Grp. Delay | Group delay in samples (−d∠H(ω)/dω) |
 | Pole-Zero | Roots of b (○) and roots of a (×) on the z-plane with unit circle |
 | Impulse | Filter response to a unit impulse |
 | Coefficients | Scrollable table of coefficients in the selected structure. A **Structure** dropdown selects: Direct Form (b/a), Second-Order Sections, or State-Space. |
-| Info | Summary table: filter type, structure, order, length, sample rate, stability, linear phase type, −3 dB frequency, passband ripple, and stopband attenuation. |
+| Info | Summary table: filter type, structure, order, length, sample rate, stability, linear phase type, −3 dB frequency (shape-aware: Cutoff / Lower+Upper cutoff+Bandwidth), passband ripple (oscillation only — monotone filters show 0 dB), and stopband attenuation. |
 
 The frequency axis on all frequency-domain plots reflects the active **Freq Unit** selection.
 
@@ -129,7 +129,8 @@ src/
                        cb_import_coeffs, cb_export_coeffs,
                        cb_order_changed, cb_freq_changed,
                        cb_plot_select, cb_phase_wrap_toggle,
-                       cb_freq_unit_changed, cb_structure_changed
+                       cb_mag_scale_toggle, cb_freq_unit_changed,
+                       cb_structure_changed
 tests/
   run_all_tests.m      Test runner
   assert_near.m        Numeric tolerance helper

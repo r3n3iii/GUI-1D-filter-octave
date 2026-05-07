@@ -61,6 +61,7 @@ function handles = build_main_window()
   handles.density_factor = 20;
   handles.active_plot   = 'magnitude';
   handles.phase_wrapped = true;
+  handles.mag_linear    = false;
   handles.freq_unit     = 'Hz';
 
   guidata(fig, handles);
@@ -86,6 +87,7 @@ function handles = build_main_window()
     key = PLOT_KEYS{i};
     set(handles.btns_plot(i), 'Callback', @(h,e) cb_plot_select(h, key));
   end
+  set(handles.btn_mag_scale,  'Callback', @cb_mag_scale_toggle);
   set(handles.btn_phase_wrap, 'Callback', @cb_phase_wrap_toggle);
 
   apply_param_visibility(handles);
