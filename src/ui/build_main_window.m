@@ -81,7 +81,7 @@ function handles = build_main_window()
   set(handles.ed_wn,         'Callback', @cb_freq_changed);
 
   PLOT_KEYS = {'magnitude','phase','phase_delay','group_delay', ...
-               'polezero','impulse','coefficients'};
+               'polezero','impulse','coefficients','info'};
   for i = 1:numel(handles.btns_plot)
     key = PLOT_KEYS{i};
     set(handles.btns_plot(i), 'Callback', @(h,e) cb_plot_select(h, key));

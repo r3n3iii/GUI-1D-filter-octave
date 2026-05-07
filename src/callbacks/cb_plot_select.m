@@ -12,7 +12,7 @@ function cb_plot_select(hobj, key)
 
   % Highlight the active button, reset others
   PLOT_KEYS = {'magnitude','phase','phase_delay','group_delay', ...
-               'polezero','impulse','coefficients'};
+               'polezero','impulse','coefficients','info'};
   for i = 1:numel(handles.btns_plot)
     if strcmp(PLOT_KEYS{i}, key)
       set(handles.btns_plot(i), 'BackgroundColor', [0.30 0.60 1.00]);

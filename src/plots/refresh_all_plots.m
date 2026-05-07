@@ -12,12 +12,28 @@ function refresh_all_plots(handles)
     xlabel(handles.ax_main, '');
     ylabel(handles.ax_main, '');
     set(handles.ax_main,       'Visible', 'off');
+    set(handles.tbl_info,      'Visible', 'off');
     set(handles.tbl_coeffs,    'Visible', 'on');
     set(handles.lbl_structure, 'Visible', 'on');
     set(handles.dd_structure,  'Visible', 'on');
     update_coeff_table(handles);
+
+  elseif strcmp(handles.active_plot, 'info')
+    cla(handles.ax_main);
+    title(handles.ax_main,  '');
+    xlabel(handles.ax_main, '');
+    ylabel(handles.ax_main, '');
+    set(handles.ax_main,       'Visible', 'off');
+    set(handles.tbl_coeffs,    'Visible', 'off');
+    set(handles.lbl_structure, 'Visible', 'off');
+    set(handles.dd_structure,  'Visible', 'off');
+    struct_idx = get(handles.dd_structure, 'Value');
+    rows = compute_filter_info(handles.b, handles.a, handles.Fs, struct_idx);
+    set(handles.tbl_info, 'Data', rows, 'Visible', 'on');
+
   else
     set(handles.tbl_coeffs,    'Visible', 'off');
+    set(handles.tbl_info,      'Visible', 'off');
     set(handles.lbl_structure, 'Visible', 'off');
     set(handles.dd_structure,  'Visible', 'off');
     set(handles.ax_main,       'Visible', 'on');
